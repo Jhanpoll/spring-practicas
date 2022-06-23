@@ -29,8 +29,7 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		// TODO Auto-generated method stub
 		
-		/* 
-		 * INICIO DE SEGUNDO BLOQUE
+		//INICIO DE SEGUNDO BLOQUE
 		 
 		List<Employee> employees= template.query("select * from employee", new EmployeeRowMapper());
 		
@@ -43,10 +42,10 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 					getSalario());
 		}
 		
-		FIN DEL BLOQUE 2
-		*/
+		//FIN DEL BLOQUE 2
 		
-		//INICIO DE BLOQUE 1 TEMPLORAL COMENTADO
+		
+		/*INICIO DE BLOQUE 1 TEMPLORAL COMENTADO
 
  
 		Double maxSalary = template.queryForObject("select MAX(salario) from employee", Double.class);
@@ -63,8 +62,8 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 		log.info("fila de newEmployeeTwo es {}",newEmployeeTwo);
 		
 		
-		
-		//FIN DE BLOQUE 1 TEMPLORAL COMENTADO
+		FIN DE BLOQUE 1 TEMPLORAL COMENTADO
+		*/
 		
 	} 
 	
