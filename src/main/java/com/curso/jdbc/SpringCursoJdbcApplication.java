@@ -25,73 +25,64 @@ import com.curso.jdbc.models.entity.Employee;
 public class SpringCursoJdbcApplication implements ApplicationRunner {
 	@Autowired
 	private JdbcTemplate template;
-	
+
 	private static final Logger log = LoggerFactory.getLogger(SpringCursoJdbcApplication.class);
-	
+
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		// TODO Auto-generated method stub
-		
-		//INICIO DE SEGUNDO BLOQUE
-		 
-		List<Employee> employees= template.query("select * from employee", new RowMapper<Employee>() {
-			// implementando la clase anonima
-			@Override
-			public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Employee employee = new Employee();
-				employee.setId(rs.getInt(1));
-				employee.setNombre(rs.getString("nombre"));
-				employee.setApellido(rs.getString("apellido"));
-				employee.setAge(rs.getInt("age"));
-				employee.setSalario(rs.getDouble("salario"));
-				
-				
-				return employee;
-			}
-			
-		});
-		
-		for (Employee employee : employees) {
-			log.info("id{} , nombre {}, apellido{}, edad{}, salario{}",
-					employee.getId(),
-					employee.getNombre(),
-					employee.getApellido(),
-					employee.getAge(),
-					employee.getSalario()
-					);
-		}
-		
-		
-		//FIN DEL BLOQUE 2
-		
-		
-		/*INICIO DE BLOQUE 1 TEMPLORAL COMENTADO
 
- 
-		Double maxSalary = template.queryForObject("select MAX(salario) from employee", Double.class);
-		int countEmployee = template.queryForObject("select count(1) from employee", int.class);
-		
-		
-		int newEmployee = template.update("insert into employee(nombre,apellido,age,salario) values(?,?,?,?)","jesus3","chero3","27",1700);
-		int newEmployeeTwo = template.update("insert into employee(nombre,apellido,age,salario)values(?,?,?,?)",
-				"jesus4","chero4",28,1800);
-		
-		log.info("MAX salary {}", maxSalary);
-		log.info("la cantidad es {}", countEmployee);
-		log.info("fila nueva es {}", newEmployee);
-		log.info("fila de newEmployeeTwo es {}",newEmployeeTwo);
-		
-		
-		FIN DE BLOQUE 1 TEMPLORAL COMENTADO
-		*/
-		
-	} 
-	
-	public static void main(String[] args) {
-		SpringApplication.run(SpringCursoJdbcApplication.class, args);
-		
+		// INICIO DE SEGUNDO BLOQUE
+
+		/* con esto se implementa el lambda que reemplaza al rowMapper */
+
+		List<Employee> employees = template.query("select * from employee", (rs, rowNum) -> {
+			Employee employee = new Employee();
+			employee.setId(rs.getInt(1));
+			employee.setNombre(rs.getString("nombre"));
+			employee.setApellido(rs.getString("apellido"));
+			employee.setAge(rs.getInt("age"));
+			employee.setSalario(rs.getDouble("salario"));
+
+			return employee;
+		});
+
+		for (Employee employee : employees) {
+			log.info("id{} , nombre {}, apellido{}, edad{}, salario{}", employee.getId(), employee.getNombre(),
+					employee.getApellido(), employee.getAge(), employee.getSalario());
+		}
+
+		// FIN DEL BLOQUE 2
+
+		/*
+		 * INICIO DE BLOQUE 1 TEMPLORAL COMENTADO
+		 * 
+		 * 
+		 * Double maxSalary =
+		 * template.queryForObject("select MAX(salario) from employee", Double.class);
+		 * int countEmployee = template.queryForObject("select count(1) from employee",
+		 * int.class);
+		 * 
+		 * 
+		 * int newEmployee = template.
+		 * update("insert into employee(nombre,apellido,age,salario) values(?,?,?,?)"
+		 * ,"jesus3","chero3","27",1700); int newEmployeeTwo = template.
+		 * update("insert into employee(nombre,apellido,age,salario)values(?,?,?,?)",
+		 * "jesus4","chero4",28,1800);
+		 * 
+		 * log.info("MAX salary {}", maxSalary); log.info("la cantidad es {}",
+		 * countEmployee); log.info("fila nueva es {}", newEmployee);
+		 * log.info("fila de newEmployeeTwo es {}",newEmployeeTwo);
+		 * 
+		 * 
+		 * FIN DE BLOQUE 1 TEMPLORAL COMENTADO
+		 */
+
 	}
 
+	public static void main(String[] args) {
+		SpringApplication.run(SpringCursoJdbcApplication.class, args);
 
+	}
 
 }
