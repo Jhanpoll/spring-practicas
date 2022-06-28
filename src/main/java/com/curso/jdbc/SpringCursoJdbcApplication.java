@@ -1,5 +1,10 @@
 package com.curso.jdbc;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -7,6 +12,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
+import org.h2.tools.RunScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +21,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -32,25 +39,7 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 		// TODO Auto-generated method stub
 
-		// INICIO DE SEGUNDO BLOQUE
-
-		/* con esto se implementa el lambda que reemplaza al rowMapper */
-
-		List<Employee> employees = template.query("select * from employee", (rs, rowNum) -> {
-			Employee employee = new Employee();
-			employee.setId(rs.getInt(1));
-			employee.setNombre(rs.getString("nombre"));
-			employee.setApellido(rs.getString("apellido"));
-			employee.setAge(rs.getInt("age"));
-			employee.setSalario(rs.getDouble("salario"));
-
-			return employee;
-		});
-
-		for (Employee employee : employees) {
-			log.info("id{} , nombre {}, apellido{}, edad{}, salario{}", employee.getId(), employee.getNombre(),
-					employee.getApellido(), employee.getAge(), employee.getSalario());
-		}
+		
 
 		// FIN DEL BLOQUE 2
 
@@ -81,8 +70,10 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 	}
 
 	public static void main(String[] args) {
+		
 		SpringApplication.run(SpringCursoJdbcApplication.class, args);
 
+		
 	}
-
+			
 }
