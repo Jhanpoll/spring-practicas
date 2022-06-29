@@ -40,17 +40,21 @@ public class JdbcConexion {
 			rowStatement.setString(2,"arge");
 			rowStatement.setString(3,"c#lover");
 			
-			row = rowStatement.executeUpdate();
-			
-			System.out.println("row impacted : "+ row);
+			boolean execute = rowStatement.execute();
+			System.out.println("is insertion : "+ (execute==false));
+			int updateCount = rowStatement.getUpdateCount();
+			System.out.println("row impacted : "+ updateCount);
 			
 			rowStatement.close();
 			
 			/*realizar una query : select * from tabla*/
 			PreparedStatement queryStatement = connection.prepareStatement("select * from person");
-			ResultSet executeQuery = queryStatement.executeQuery();
-			while(executeQuery.next()) {
-				System.out.printf("\nid[%d] nombre[%s] apellid[%s] nickname[%s]", executeQuery.getInt(1),executeQuery.getString(2),executeQuery.getString(3),executeQuery.getString(4));
+			boolean execute2 = queryStatement.execute();
+			ResultSet resultSet = queryStatement.getResultSet();
+			System.out.println("is resulset : " + execute2);
+			//ResultSet executeQuery = queryStatement.executeQuery();
+			while(resultSet.next()) {
+				System.out.printf("\nid[%d] nombre[%s] apellid[%s] nickname[%s]", resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),resultSet.getString(4));
 				
 			}
 			
