@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import com.curso.jdbc.mappers.EmployeeRowMapper;
 import com.curso.jdbc.models.entity.Address;
@@ -69,7 +73,27 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-
+		
+		KeyHolder holder = new GeneratedKeyHolder();
+		int rowsImpacted = template.update(new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				// TODO Auto-generated method stub
+				PreparedStatement statement = con.prepareStatement("insert into address(street,pc,employee_id,number) "
+						+ "values (?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+				statement.setString(1, "calle san pedro");
+				statement.setInt(2,26);
+				statement.setInt(3,11);
+				statement.setString(4, "23");
+				return statement;
+			}
+		}, holder);
+		
+		log.info("rows impacted: "+rowsImpacted);
+		log.info("generated keyholder: "+ holder.getKey().intValue() );
+		
+		/*
 		insertAddresses(Arrays.asList(new Address("calle san pedro",21,4,"23"),
 				new Address("calle san pedro",21,10,"23"),
 				new Address("calle san pedro",21,12,"23")
