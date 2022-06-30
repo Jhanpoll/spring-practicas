@@ -2,11 +2,14 @@ package com.curso.jdbc;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +26,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.curso.jdbc.mappers.EmployeeRowMapper;
+import com.curso.jdbc.models.entity.Address;
 import com.curso.jdbc.models.entity.Employee;
 
 @SpringBootApplication
@@ -35,17 +40,48 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 	private JdbcTemplate template;
 
 	private static final Logger log = LoggerFactory.getLogger(SpringCursoJdbcApplication.class);
+	
+	private  void insertAddresses(List<Address>addresses) {
+		int[] rowAddressesImpacted = template.batchUpdate("insert into address(street,pc,employee_id,number) "
+				+ "values (?,?,?,?)", new BatchPreparedStatementSetter() {
 
+					@Override
+					public void setValues(PreparedStatement ps, int i) throws SQLException {
+						// TODO Auto-generated method stub
+						Address address = addresses.get(i);
+						ps.setString(1, address.getStreet());
+						ps.setInt(2, address.getPc());
+						ps.setInt(3, address.getEmployee_id());
+						ps.setString(4, address.getNumber());
+					}
+
+					@Override
+					public int getBatchSize() {
+						// TODO Auto-generated method stub
+						return addresses.size();
+					}
+				});
+		for (int rowAd : rowAddressesImpacted) {
+			log.info("row addressess impacted : "+ rowAd);
+		}
+		
+	}
+	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		// TODO Auto-generated method stub
-		
+
+		insertAddresses(Arrays.asList(new Address("calle san pedro",21,4,"23"),
+				new Address("calle san pedro",21,10,"23"),
+				new Address("calle san pedro",21,12,"23")
+				));
+			
+		/*
 		List<String> queryForList = template.queryForList("select nombre from employee where age>?",new Object[] {29},String.class);
 		
 		for (String name : queryForList) {
 			log.info("nombre : "+name);
 		}
-
+		 */
 		// FIN DEL BLOQUE 2
 
 		/*
