@@ -38,7 +38,24 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		// TODO Auto-generated method stub
-
+		
+		/*con este ejemplo de abajo , existe un error al querer insertar un employee_id = 13
+		 * porque en la tabla employee no existe el empleado numero 13
+		 * y es correcto que sea asi */
+		
+		try {
+			int rowAdress = template.update("insert into address(street,pc,employee_id,number)values"
+					+ "(?,?,?,?)","la libertad2",34,13,45);
+			log.info("row address impacted : "+rowAdress);
+			
+		} catch (DataAccessException ex) {
+			// TODO: handle exception
+			log.info("exception received: "+ ex.getClass());
+			log.info("caused by : " + ex.getCause());
+		}
+		
+		
+		
 		
 
 		// FIN DEL BLOQUE 2
