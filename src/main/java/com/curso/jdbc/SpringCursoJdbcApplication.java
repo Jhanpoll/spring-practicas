@@ -42,6 +42,9 @@ import com.curso.jdbc.models.entity.Employee;
 public class SpringCursoJdbcApplication implements ApplicationRunner {
 	@Autowired
 	private JdbcTemplate template;
+	
+	@Autowired
+	JdbcstoreProcedure jdbcStoreProcedure;
 
 	private static final Logger log = LoggerFactory.getLogger(SpringCursoJdbcApplication.class);
 	
@@ -92,6 +95,8 @@ public class SpringCursoJdbcApplication implements ApplicationRunner {
 		
 		log.info("rows impacted: "+rowsImpacted);
 		log.info("generated keyholder: "+ holder.getKey().intValue() );
+		
+		jdbcStoreProcedure.ejecutarStoreProcedure();
 		
 		/*
 		insertAddresses(Arrays.asList(new Address("calle san pedro",21,4,"23"),
